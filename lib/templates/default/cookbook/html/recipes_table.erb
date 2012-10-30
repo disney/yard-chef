@@ -10,7 +10,7 @@
     <% n = 1 %>
     <% @objects.each do |recipe| %>
       <tr class="r<%= n %>">
-        <td><a href="../<%= url_for(recipe_ns, recipe.Name, false) %>">
+        <td><a href="<%= url_for(recipe_ns, recipe.Name, false) %>">
           <%= recipe.Name %></a></td>
         <td><%= recipe.docstring %></td>
       </tr>
