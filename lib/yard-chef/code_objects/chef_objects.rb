@@ -273,8 +273,29 @@ class YARD::CLI::Stats
   def stats_for_recipes
     objs = all_objects.select {|m| m.type == :recipe }
     #objs.reject! {|m| m.is_alias? || !m.is_explicit? }
-    undoc = objs.select {|m| m.docstring.blank? && !m.overridden_method }
+    undoc = objs.select {|m| m.docstring.blank? }
     @undoc_list |= undoc if @undoc_list
     output "Recipes", objs.size, undoc.size
+  end
+  def stats_for_resources
+    objs = all_objects.select {|m| m.type == :resource }
+    #objs.reject! {|m| m.is_alias? || !m.is_explicit? }
+    undoc = objs.select {|m| m.docstring.blank? }
+    @undoc_list |= undoc if @undoc_list
+    output "Resources", objs.size, undoc.size
+  end
+  def stats_for_defines
+    objs = all_objects.select {|m| m.type == :define }
+    #objs.reject! {|m| m.is_alias? || !m.is_explicit? }
+    undoc = objs.select {|m| m.docstring.blank? }
+    @undoc_list |= undoc if @undoc_list
+    output "Defines", objs.size, undoc.size
+  end
+  def stats_for_actions
+    objs = all_objects.select {|m| m.type == :action }
+    #objs.reject! {|m| m.is_alias? || !m.is_explicit? }
+    undoc = objs.select {|m| m.docstring.blank? }
+    @undoc_list |= undoc if @undoc_list
+    output "Actions", objs.size, undoc.size
   end
 end
