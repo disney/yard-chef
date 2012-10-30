@@ -270,11 +270,11 @@ module YARD::CodeObjects
 end
 
 class YARD::CLI::Stats
-  def stats_for_cookbooks
-    objs = all_objects.select {|m| m.type == :cookbook }
-    objs.reject! {|m| m.is_alias? || !m.is_explicit? }
+  def stats_for_recipes
+    objs = all_objects.select {|m| m.type == :recipe }
+    #objs.reject! {|m| m.is_alias? || !m.is_explicit? }
     undoc = objs.select {|m| m.docstring.blank? && !m.overridden_method }
     @undoc_list |= undoc if @undoc_list
-    output "Cookbooks", objs.size, undoc.size
+    output "Recipes", objs.size, undoc.size
   end
 end
