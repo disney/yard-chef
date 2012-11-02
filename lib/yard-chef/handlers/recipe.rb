@@ -29,7 +29,26 @@ module YARD::Handlers
 
       def process
         name = statement.parameters.first.jump(:string_content).source
-        recipe_obj = YARD::Registry.resolve(:root, "#{CHEF}::#{name}")
+        # if it's not a fully-qualified recipe name, prepend the current cookbook
+	unless name =~ /::/
+          path_arr = parser.file.to_s.split('/')
+          if path_arr.include?('metadata.rb')
+            cookbook = path_arr[path_arr.index('metadata.rb') - 1]
+	    if cookbook != name
+	      log.debug "Looking up #{cookbook}::#{name}"
+              recipe_obj = YARD::Registry.resolve(:root, "#{CHEF}::#{cookbook}::#{name}")
+	    else
+	      log.debug "Looking up #{name}::default"
+	      recipe_obj = YARD::Registry.resolve(:root, "#{CHEF}::#{name}::default")
+	    end
+	  else
+	    log.debug "name does not include a :: separator and I'm not looking in metadata.rb?"
+	    recipe_obj = nil
+          end
+        else
+	  log.debug("Looking up #{name}")
+          recipe_obj = YARD::Registry.resolve(:root, "#{CHEF}::#{name}")
+        end
         log.info "Found Recipe #{recipe_obj.name} => #{recipe_obj.namespace}"
         recipe_obj.docstring = statement.parameters[1]
       end
