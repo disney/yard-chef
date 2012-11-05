@@ -23,21 +23,21 @@ require 'yard'
 
 module YARD::Handlers
   module Chef
-    class AttributeHandler < YARD::Handlers::Ruby::Base
+    class CBAttributeHandler < YARD::Handlers::Ruby::Base
       include YARD::CodeObjects::Chef
-      handles method_call(:attribute)
+      handles method_call(:default)
+      handles method_call(:override)
+      handles method_call(:set)
       
       def process
         path_arr = parser.file.to_s.split('/')
         if path_arr.include?('metadata.rb')
           namespace = find_cookbook(path_arr[path_arr.index('metadata.rb') - 1])
-        else
-	  source = path_arr.include?('resources') ? path_arr.index('resources') : path_arr.index('libraries')
-          cookbook = find_cookbook(path_arr[source - 1])
-          resource_name = cookbook.get_lwrp_name(path_arr[path_arr.size - 1])
-          namespace = YARD::Registry.resolve(:root, "#{RESOURCE}::#{resource_name}")
+	elsif path_arr.include?('attributes')
+	  namespace = find_cookbook(path_arr[path_arr.index('attributes') - 1])
         end
       
+        log.debug "Statement inspect: #{statement.inspect}"
         name = statement.parameters.first.jump(:string_content, :ident).source
         attrib_obj = AttributeObject.new(namespace, name) do |attrib|
           attrib.source     = statement.source
@@ -48,7 +48,7 @@ module YARD::Handlers
         statement.source.split(%r{,\s*:}).each do |param|
           insert_params(attrib_obj, param)
         end
-        log.info "Creating [Attribute] #{attrib_obj.name} => #{attrib_obj.namespace}"
+        log.info "Creating [CBAttribute] #{attrib_obj.name} => #{attrib_obj.namespace}"
       end
     
       def insert_params(attrib, param)
