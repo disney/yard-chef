@@ -19,11 +19,20 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-def init
-  sections.push :definition_list, [:source]
-end
+require 'yard'
 
-def source
-  return if object.source.nil?
-  erb(:source)
+module YARD::CodeObjects
+  module Chef
+    # An AttributeObject represents a cookbook or a resource attribute. See http://wiki.opscode.com/display/chef/Attributes
+    class AttributeObject < ChefObject
+      register_element :attribute
+
+      # Creates a new instance of AttributeObject.
+      # @param [NamespaceObject] namespace namespace to which the attribute must belong.
+      # @param [String] name name of the attribute.
+      def initialize(namespace, name)
+        super(namespace, name)
+      end
+    end
+  end
 end

@@ -22,18 +22,4 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 %>
 
-<% n = 1 %>
-<% @items.each do |item| %>
-  <% unless item.resources.empty? %>
-    <% item.resources.each do |resource| %>
-      <li class="r<%= n %>">
-        <span class="object_link">
-          <a href="<%= url_for(item, resource.long_name) %>" title="<%= resource.file %>">
-            <%= h(resource.name) %>
-          </a>
-        </span>
-      </li>
-      <% n = n == 2 ? 1 : 2 %>
-    <% end %>
-  <% end %>
-<% end %>
+<%= htmlify(object.docstring, object.readme_type) %>

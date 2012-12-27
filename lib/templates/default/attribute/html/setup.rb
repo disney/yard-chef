@@ -20,10 +20,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 def init
-  sections.push :definition_list, [:source]
-end
+  @attributes = object.children_by_type(:attribute)
 
-def source
-  return if object.source.nil?
-  erb(:source)
+  sections.push :attribute_header, [:table]
 end

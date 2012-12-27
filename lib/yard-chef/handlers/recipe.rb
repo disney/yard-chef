@@ -23,33 +23,20 @@ require 'yard'
 
 module YARD::Handlers
   module Chef
+    # Handles "recipes" in a cookbook.
     class RecipeHandler < YARD::Handlers::Ruby::Base
       include YARD::CodeObjects::Chef
       handles method_call(:recipe)
 
       def process
-        name = statement.parameters.first.jump(:string_content).source
-        # if it's not a fully-qualified recipe name, prepend the current cookbook
-	unless name =~ /::/
-          path_arr = parser.file.to_s.split('/')
-          if path_arr.include?('metadata.rb')
-            cookbook = path_arr[path_arr.index('metadata.rb') - 1]
-	    if cookbook != name
-	      log.debug "Looking up #{cookbook}::#{name}"
-              recipe_obj = YARD::Registry.resolve(:root, "#{CHEF}::#{cookbook}::#{name}")
-	    else
-	      log.debug "Looking up #{name}::default"
-	      recipe_obj = YARD::Registry.resolve(:root, "#{CHEF}::#{name}::default")
-	    end
-	  else
-	    log.debug "name does not include a :: separator and I'm not looking in metadata.rb?"
-	    recipe_obj = nil
-          end
-        else
-	  log.debug("Looking up #{name}")
-          recipe_obj = YARD::Registry.resolve(:root, "#{CHEF}::#{name}")
-        end
-        log.info "Found Recipe #{recipe_obj.name} => #{recipe_obj.namespace}"
+        path_arr = parser.file.to_s.split('/')
+
+        # Recipe descriptions are obtained from cookbook metadata
+        cookbook_name = path_arr[path_arr.index('metadata.rb') - 1] if path_arr.include?('metadata.rb')
+        cookbook = ChefObject.register(CHEF, cookbook_name, :cookbook)
+
+        recipe_name = statement.parameters.first.jump(:string_content).source
+        recipe_obj = ChefObject.register(cookbook, recipe_name, :recipe)
         recipe_obj.docstring = statement.parameters[1]
       end
     end

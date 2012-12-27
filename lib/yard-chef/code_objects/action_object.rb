@@ -19,11 +19,20 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-def init
-  sections.push :definition_list, [:source]
-end
+require 'yard'
 
-def source
-  return if object.source.nil?
-  erb(:source)
+module YARD::CodeObjects
+  module Chef
+    # An <ActionObject> represents an action in a lightweight provider. See http://wiki.opscode.com/display/chef/Lightweight+Resources+and+Providers+%28LWRP%29#LightweightResourcesandProviders%28LWRP%29-Keyword%3Aaction
+    class ActionObject < ChefObject
+      register_element :action
+
+      # Creates a new instance of ActionObject.
+      # @param [NamespaceObject] namespace namespace to which the action belongs.
+      # @param [String] name name of the action.
+      def initialize(namespace, name)
+        super(namespace, name)
+      end
+    end
+  end
 end
