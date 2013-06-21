@@ -89,6 +89,14 @@ module YARD::CodeObjects::Chef
         cookbook = ChefObject.register(CHEF, cookbook_name, :cookbook)
 
         cookbook.libraries.push(path_arr.join('/'))
+      # Register attributes
+      elsif path_arr.include?('attributes')
+        cookbook_name = path_arr[path_arr.index('attributes') - 1]
+        cookbook = ChefObject.register(CHEF, cookbook_name, :cookbook)
+
+        attribute = ChefObject.register(CHEF, cookbook_name, :attribute)
+	attribute.source = IO.read(file)
+        attribute.add_file(file, 1)
       end
     end
   end
