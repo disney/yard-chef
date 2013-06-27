@@ -24,8 +24,11 @@ require 'yard'
 module YARD::Handlers
   module Chef
     # Handles "attributes" in cookbook metadata and lightweight resource.
-    #
-    class AttributeHandler < Base
+    # ... and when they're assigned to a node/default/override.
+# chef > lambda { node[:platform] }.to_sexp
+#  => s(:iter, s(:call, nil, :proc), s(:args), s(:call, s(:call, nil, :node), :[], s(:lit, :platform))) 
+    class ResourceAttributeHandler < YARD::Handlers::Ruby::Base
+      include YARD::CodeObjects::Chef
       handles method_call(:attribute)
 
       # Process "attribute" keyword.
@@ -33,10 +36,18 @@ module YARD::Handlers
       def process
         # If file path includes metadata then handle cookbook attributes
         # else handle resource attributes
-        if parser.file =~ /metadata\.rb/
-          namespace = cookbook
-        else
-          namespace = lwrp
+        if path_arr.include?('metadata.rb')
+          cookbook_name = path_arr[path_arr.index('metadata.rb') - 1]
+          namespace = ChefObject.register(CHEF, cookbook_name, :cookbook)
+        elsif path_arr.index('resources')
+          resource_idx = path_arr.index('resources')
+          cookbook_name = path_arr[resource_idx - 1]
+          resource_name = path_arr[resource_idx + 1].to_s.sub('.rb','')
+
+          lwrp_name = resource_name == 'default' ? cookbook_name : "#{cookbook_name}_#{resource_name}"
+
+          # Register lightweight resource if not already registered
+          namespace = ChefObject.register(RESOURCE, lwrp_name, :resource)
           namespace.add_file(statement.file)
 
           cookbook_obj = cookbook
@@ -46,7 +57,9 @@ module YARD::Handlers
         end
 
         # Register attribute if not already registered
-        attrib_obj = ChefObject.register(namespace, name, :attribute)
+	# this is probably going to need a bunch of refactoring to support inline attributes...
+        attrib_name = statement.parameters.first.jump(:string_content, :ident).source
+        attrib_obj = ChefObject.register(namespace, attrib_name, :resource_attribute)
         attrib_obj.source = statement.source
         attrib_obj.docstring = docstring
         attrib_obj.add_file(statement.file, statement.line)

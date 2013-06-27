@@ -27,11 +27,14 @@ require 'yard-chef/code_objects/resource_object'
 require 'yard-chef/code_objects/provider_object'
 require 'yard-chef/code_objects/recipe_object'
 require 'yard-chef/code_objects/attribute_object'
+require 'yard-chef/code_objects/cookbookattribute_object'
+require 'yard-chef/code_objects/resourceattribute_object'
 require 'yard-chef/code_objects/action_object'
 
 require 'yard-chef/handlers/base'
 require 'yard-chef/handlers/action'
-require 'yard-chef/handlers/attribute'
+require 'yard-chef/handlers/cookbook_attribute'
+require 'yard-chef/handlers/resource_attribute'
 require 'yard-chef/handlers/define'
 require 'yard-chef/handlers/actions'
 require 'yard-chef/handlers/cookbook'
@@ -82,9 +85,9 @@ module YARD::CodeObjects::Chef
         cookbook_name = path_arr[path_arr.index('attributes') - 1]
         cookbook = ChefObject.register(CHEF, cookbook_name, :cookbook)
 
-        attribute = ChefObject.register(CHEF, cookbook_name, :attribute)
-	attribute.source = IO.read(file)
-        attribute.add_file(file, 1)
+        cb_attribute = ChefObject.register(CHEF, cookbook_name, :cookbook_attribute)
+	cb_attribute.source = IO.read(file)
+        cb_attribute.add_file(file, 1)
       end
     end
   end

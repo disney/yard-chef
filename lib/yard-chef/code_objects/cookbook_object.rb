@@ -58,6 +58,22 @@ module YARD::CodeObjects
       #
       attr_reader :providers
 
+      # Cookbook libraries.
+      # @return [Array<NamespaceObject>] cookbook libraries.
+      attr_reader :libraries
+
+      # Cookbook definitions.
+      # @return [Array<DefinitionObject>] cookbook definitions.
+      attr_reader :definitions
+
+      # Cookbook attributes.
+      # @return [Array<CookbookattributeObject>] cookbook attributes.
+      attr_reader :attributes
+
+      # Type of README file (:rdoc, :markdown, etc.).
+      # @return [Symbol] README type.
+      attr_reader :readme_type
+
       # Creates a new CookbookObject instance.
       # @param namespace [NamespaceObject] namespace to which the cookbook
       # belongs
@@ -70,6 +86,8 @@ module YARD::CodeObjects
         @resources = []
         @providers = []
         @libraries = []
+	@attributes = []
+        @readme_type = :markdown
       end
 
       # Recipes implemented in the cookbook.
