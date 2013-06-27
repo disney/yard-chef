@@ -20,7 +20,10 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 def init
-  @attributes = object.children_by_type(:cookbookattribute)
+  sections.push :cookbookattribute_list, [:source]
+end
 
-  sections.push :attribute_header, [:table]
+def source
+  return if object.source.nil?
+  erb(:source)
 end
