@@ -1,0 +1,16 @@
+<%# vim: filetype=eruby.html
+%>
+
+<% attributes = object.attributes %>
+<% if attributes.size > 0 %>
+  <h2>Cookbook Attribute Details</h2>
+  <% attributes.select { |a| a.type == :cookbookattribute }.each_with_index do |attribute, i| %>
+    <div class="method_details <%= 'first' if i == 0 %>">
+      <h3 class="signature"><a name="<%= attribute.name %>">
+        <strong><%= attribute.namespace_to_node %></strong>
+      </a></h3>
+      <%= htmlify attribute.docstring %>
+      <%= yieldall :object => attribute, :owner => object, :index => i %>
+    </div>
+  <% end %>
+<% end %>

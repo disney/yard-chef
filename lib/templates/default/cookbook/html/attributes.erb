@@ -1,0 +1,16 @@
+<%# vim: filetype=eruby.html
+%>
+
+<% if object.attributes.size > 0 %>
+  <h2>Attribute Summary</h2>
+  <ul class="summary">
+    <% object.attributes.select { |o| o.type == :cookbookattribute }.each do |attribute| %>
+      <li>
+        <span class="summary_signature">
+          <strong><a href="#<%= attribute.name %>"><%= attribute.namespace_to_node() %></a></strong>
+        </span>
+        <span class="summary_desc"><%= docstring_summary(attribute) %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
