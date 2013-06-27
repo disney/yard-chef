@@ -22,19 +22,39 @@
 include T('default/module')
 
 def init
-  sections :cookbook_title,
-            [
-              :docstring,
-              :generated_docs,
-                [
-                  :recipes,
-                  T('resource'),
-                  T('provider'),
-                  T('attribute'),
-                  :definitions,
-                  :libraries,
-                  :element_details,
-                  [T('recipe'), T('action'), T('definition')]
+  sections.push :cookbook_title, [
+                  :docstring,
+                  :generated_docs,
+                  [
+                    :recipes,
+		    :attributes,
+                    T('resource'),
+                    T('provider'),
+                    T('resource_attribute'),
+                    :definitions,
+                    :libraries,
+                    :element_details,
+                    [T('recipe'), T('cookbook_attribute'), T('action'), T('definition')]
+                  ]
                 ]
-            ]
+  @libraries = YARD::Registry.all(:module)
+end
+
+def namespace_to_node(attr)
+  ns = attr.namespace.to_s.split("::")[2..-1].join("::")
+  puts ns.inspect
+  #ns.gsub!(/::/,"")
+  if ns == ""
+    "node[:#{attr.name.downcase}]"
+  else 
+    "node[:#{ns.gsub(/::/,"][:").downcase}][:#{attr.name.downcase}]"
+  end
+end
+
+def find_library(library_file)
+  libs = []
+  @libraries.each do |library|
+    libs.push(library) if library.file == library_file
+  end
+  libs
 end

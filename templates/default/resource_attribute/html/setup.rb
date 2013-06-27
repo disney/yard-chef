@@ -20,7 +20,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 def init
-  @providers = object.providers
+  @attributes = object.children_by_type(:resourceattribute)
 
-  sections.push :resource_list, [:actions, T('resource_attribute'), T('provider')]
+  sections.push :attribute_header, [:table]
 end

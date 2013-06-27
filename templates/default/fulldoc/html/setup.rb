@@ -66,6 +66,14 @@ def generate_libraries_list
   generate_full_list(libraries, 'Library', 'class')
 end
 
+# Called by menu_lists in layout/html/setup.rb by default ... although, you know what?
+# i don't know that to be true.  i'm just copying the comments from #generate_libraries_list().
+
+def generate_cookbookattribute_list
+  attributes = YARD::Registry.all(:cookbookattribute).uniq.sort_by{|attr| attr.name.to_s}
+  generate_full_list(attributes, 'Node Attributes', 'cookbookattribute')
+end
+
 def generate_full_list(objects, title, type)
   @items = objects
   @list_title = "#{title} List"
