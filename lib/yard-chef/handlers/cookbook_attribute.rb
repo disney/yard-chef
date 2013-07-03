@@ -36,10 +36,12 @@ module YARD::Handlers
         path_arr = parser.file.to_s.split('/')
 	if path_arr.include?('attributes') and statement.source =~ /node.+=.+/
           # register cookbook if it hasn't already been registered
-	  puts "CB_SOURCE = #{statement.source}"
+	  #puts "CB_SOURCE = #{statement.source}"
           cookbook_name = path_arr[path_arr.find_index('attributes')-1] # cookbookname/attributes/FILE.rb
           cookbook_obj = ChefObject.register(CHEF, cookbook_name, :cookbook)
           cookbook_obj.add_file(statement.file)
+	  node_obj = ChefObject.register(:root, "node", :node)
+          node_obj.add_file(statement.file)
 	name = nil
 	names = []
 	statement.source.scan(/(\[[\[\]\'\"\:\w]+) = .*/) { |ad| ad[0].scan(/\[([:\'\"\-_\w]+?)\]( =){0}/) { |m| names.push(m[0].gsub(/[:\'\"]/, "")) } }
@@ -47,11 +49,15 @@ module YARD::Handlers
 	#/(\[([:'"\-_\w]+)\])/.match(statement.source) { |m| name = m[1].gsub(/['"]?\]\[[:'"]?/,"::").gsub(/(\[[:'"]|['"\]])/,'') }
 
         top_obj = nil
+	leaf = name.split("::").last
         name.split("::").each do |na| 
-	  puts "Taking #{na} now with source: #{statement.source}"
-          attr_obj = CookbookAttributeObject.register(top_obj.nil? ? cookbook_obj : top_obj, na, :cookbook_attribute)
-          attr_obj.source = statement.source
-          attr_obj.docstring = statement.comments
+	  puts "Taking #{na} now with source: #{statement.source} and comments: #{statement.comments}"
+          attr_obj = CookbookAttributeObject.register(node_obj.nil? ? node_obj : top_obj, na, :cookbook_attribute)
+	  if na == leaf
+            attr_obj.source = statement.source
+            attr_obj.docstring = statement.comments
+	    attr_obj.cookbook = cookbook_obj.name
+	  end
           attr_obj.add_file(statement.file, statement.line)
 	  cookbook_obj.attributes.push(attr_obj) unless cookbook_obj.attributes.include?(attr_obj)
           top_obj = attr_obj.dup()
