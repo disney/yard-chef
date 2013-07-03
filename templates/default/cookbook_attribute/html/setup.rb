@@ -20,7 +20,7 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 def init
-  sections.push :cookbookattribute_list, [:source]
+  sections.push :cookbookattribute_list, [T('docstring')]
 end
 
 def source
