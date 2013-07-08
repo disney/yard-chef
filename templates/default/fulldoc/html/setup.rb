@@ -70,7 +70,7 @@ end
 # i don't know that to be true.  i'm just copying the comments from #generate_libraries_list().
 
 def generate_cookbookattribute_list
-  attributes = YARD::Registry.all(:cookbookattribute).uniq.sort_by{|attr| attr.name.to_s}
+  attributes = YARD::Registry.all(:cookbookattribute).uniq.sort_by{|attr| attr.namespace_to_node.to_s}
   generate_full_list(attributes, 'Node Attributes', 'cookbookattribute')
 end
 
