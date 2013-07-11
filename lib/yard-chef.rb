@@ -28,6 +28,7 @@ require 'yard-chef/code_objects/provider_object'
 require 'yard-chef/code_objects/recipe_object'
 require 'yard-chef/code_objects/attribute_object'
 require 'yard-chef/code_objects/cookbookattribute_object'
+require 'yard-chef/code_objects/node_object'
 require 'yard-chef/code_objects/resourceattribute_object'
 require 'yard-chef/code_objects/action_object'
 
