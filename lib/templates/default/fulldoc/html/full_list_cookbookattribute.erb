@@ -5,7 +5,7 @@
 <% @items.each do |item| %>
   <li class="r<%= n %>">
     <span class="object_link">
-      <a href="<%= url_for(YARD::Registry.at("Chef::#{item.cookbook.to_s}")) %>#<%= h(item.name) %>" title="<%= item.file %>">
+      <a href="<%= url_for(YARD::Registry.at("Chef::#{item.cookbook.to_s}")) %>#<%= h(item.namespace_to_anchor) %>" title="<%= item.file %>">
         <%= h(item.namespace_to_node) %>
       </a>
     </span>
