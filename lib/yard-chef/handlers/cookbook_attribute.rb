@@ -51,12 +51,16 @@ module YARD::Handlers
         top_obj = nil
 	leaf = name.split("::").last
         name.split("::").each do |na| 
-	  puts "Taking #{na} now with source: #{statement.source} and comments: #{statement.comments}"
+	  #puts "Taking #{na} now with source: #{statement.source} and comments: #{statement.comments}"
           attr_obj = CookbookAttributeObject.register(node_obj.nil? ? node_obj : top_obj, na, :cookbook_attribute)
 	  if na == leaf
             attr_obj.source = statement.source
             attr_obj.docstring = statement.comments
 	    attr_obj.cookbook = cookbook_obj.name
+	  else
+	    attr_obj.source ||= ''
+	    attr_obj.docstring  ||= ''
+	    attr_obj.cookbook ||= cookbook_obj.name
 	  end
           attr_obj.add_file(statement.file, statement.line)
 	  cookbook_obj.attributes.push(attr_obj) unless cookbook_obj.attributes.include?(attr_obj)
