@@ -118,6 +118,12 @@ generated ./doc directory.  Once there run:
 Add a ```-d``` option flag to run the server in daemon mode.  For more
 information about YARD server see [http://yardoc.org/](http://rubydoc.info/docs/yard/file/docs/GettingStarted.md#yard_Executable)
 
+## Contributors
+We appreciate the efforts of all contributors for submitting patches and
+improving the yard-chef plugin. Special thanks to
+
+* [@danryan](https://github.com/danryan) for creating a gemspec
+
 ## License
 
 Copyright (c) 2012 RightScale, Inc.
