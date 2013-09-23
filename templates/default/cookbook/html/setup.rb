@@ -40,6 +40,9 @@ def init
   @libraries = YARD::Registry.all(:module)
 end
 
+#
+# Translates an object reference in YARD to a fully qualified Chef node attribute reference.
+#
 def namespace_to_node(attr)
   ns = attr.namespace.to_s.split("::")[2..-1].join("::")
   #ns.gsub!(/::/,"")
@@ -50,6 +53,9 @@ def namespace_to_node(attr)
   end
 end
 
+#
+# Translates an object reference in YARD to an anchor.  This gets used in our HTML
+# templates to create page anchors for node attributes.
 def namespace_to_anchor(attr)
   ns = attr.namespace.to_s.split("::")[2..-1].join("__")
   if ns == ""
@@ -59,6 +65,7 @@ def namespace_to_anchor(attr)
   end
 end
 
+# A helper to determine the files that mention a code object and/or docstring.
 def find_library(library_file)
   libs = []
   @libraries.each do |library|
